@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,8 @@ import com.eksad.MiniProject.service.ReportService;
 @RequestMapping("/employee")
 public class EmployeeController {
 	
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private ReportService reportService;
 	
@@ -35,6 +40,7 @@ public class EmployeeController {
 		
 	}
 
+	@Cacheable(value = "getAll")
 	@GetMapping("getAll")
 	public List<Employee> getAll(){
 		List<Employee> result = new ArrayList<>();
@@ -42,13 +48,13 @@ public class EmployeeController {
 		return result;
 	}
 	
-	
+	@Cacheable(value = "save")
 	@PostMapping(value = "save")
 	public Employee save(@RequestBody Employee employee) 
 	{	
 		return employeeDao.save(employee);
 	}
-	
+	@Cacheable(value = "update", key = "#id")
 	@PutMapping (value = "update/{id}")
 	public Employee update(@RequestBody Employee employee, @PathVariable Long id) {
 		Employee employeeSelected = employeeDao.findById(id).orElse(null);
@@ -67,7 +73,7 @@ public class EmployeeController {
 			return null;
 		}
 	}
-	
+	@Cacheable(value = "delete", key = "#id")
 	@DeleteMapping (value = "delete/{id}")
 	public HashMap<String, Object> delete(@PathVariable Long id){
 		HashMap<String, Object> result = new HashMap<String, Object>();

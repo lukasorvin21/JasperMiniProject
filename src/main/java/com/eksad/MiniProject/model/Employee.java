@@ -1,5 +1,7 @@
 package com.eksad.MiniProject.model;
 
+import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -13,12 +15,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import javassist.SerialVersionUID;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "employee")
-public class Employee {
+public class Employee implements Serializable {
+	
+	private static final long SerialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
