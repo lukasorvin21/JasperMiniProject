@@ -2,6 +2,7 @@ package com.eksad.MiniProject.controller;
 
 import java.util.ArrayList;
 
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,8 +23,12 @@ import com.eksad.MiniProject.dao.EmployeeDao;
 import com.eksad.MiniProject.model.Employee;
 import com.eksad.MiniProject.service.ReportService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/employee")
+@Api(tags = "employee")
 public class EmployeeController {
 	
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -40,6 +45,11 @@ public class EmployeeController {
 		
 	}
 
+	@ApiOperation(
+			value = "API to retieve all Employee data",
+			notes = "Return data with JSON Format",
+			tags =  "Get Data API"
+			)
 	@Cacheable(value = "getAll")
 	@GetMapping("getAll")
 	public List<Employee> getAll(){
@@ -48,12 +58,23 @@ public class EmployeeController {
 		return result;
 	}
 	
+	@ApiOperation(
+			value = "Add new employee data",
+			notes = "Add new Employee data to database",
+			tags =  "Get Data API"
+			)
 	@Cacheable(value = "save")
 	@PostMapping(value = "save")
 	public Employee save(@RequestBody Employee employee) 
 	{	
 		return employeeDao.save(employee);
 	}
+	
+	@ApiOperation(
+			value =  "Update Employee data",
+			notes =  "Update Employee data to database",
+			tags = "Data Manipulation API"
+			)
 	@Cacheable(value = "update", key = "#id")
 	@PutMapping (value = "update/{id}")
 	public Employee update(@RequestBody Employee employee, @PathVariable Long id) {
@@ -73,6 +94,11 @@ public class EmployeeController {
 			return null;
 		}
 	}
+	@ApiOperation(
+			value =  "Delete Employee data",
+			notes =  "Delete Employee data to database",
+			tags = "Data Manipulation API"
+			)
 	@Cacheable(value = "delete", key = "#id")
 	@DeleteMapping (value = "delete/{id}")
 	public HashMap<String, Object> delete(@PathVariable Long id){
